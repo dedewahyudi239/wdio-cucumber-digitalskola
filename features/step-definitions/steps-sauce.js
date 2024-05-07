@@ -1,39 +1,51 @@
 const { Given, When, Then } = require("@wdio/cucumber-framework");
-const { expect, $, browser } = require("@wdio/globals");
 
-// Scenario: User login successfully
+const SauceLoginPage = require("../pageobjects/sauce-login.page");
+const DashboardPage = require("../pageobjects/sauce-dashboard.page");
+
 Given("user is on sauce-demo page", async () => {
-  await browser.url("https://www.saucedemo.com/");
+  await SauceLoginPage.open();
 });
 
 When(/^user input username with "(.*)"$/, async (username) => {
-  await browser.$("#user-name").setValue(username);
+  await SauceLoginPage.inputUsername(username);
 });
 
 When(/^user input password with "(.*)"$/, async (password) => {
-  await browser.$("#password").setValue(password);
+  await SauceLoginPage.inputPassword(password);
 });
 
 When(/^user click button$/, async () => {
-  (await browser.$("#login-button")).click();
+  await SauceLoginPage.clickLoginButton();
 });
 
 Then(/^user should redirect to hompage$/, async () => {
-  const pageText = await browser.$("body");
-  expect(pageText).toHaveTextContaining("Sauce labs Backpack");
+  await DashboardPage.validateOnPage();
 });
 
-// Scenario: User add cart button
-Given("user is on sauce-demo homepage inventory", async () => {
-  await browser.url("https://www.saucedemo.com/inventory.html");
+Then(
+  /^user login using username "(.*)" and password "(.*)"$/,
+  async (username, password) => {
+    await SauceLoginPage.login(username, password);
+  }
+);
+
+Then("user should see empty cart", () => {
+  // Write code here that turns the phrase above into concrete actions
 });
 
-When(/^user click add to cart button$/, async () => {
-  (await browser.$("#add-to-cart-sauce-labs-backpack")).click();
+When("user click cart button", () => {
+  // Write code here that turns the phrase above into concrete actions
 });
 
-Then(/^user click cart button$/, async () => {
-  await browser.url("https://www.saucedemo.com/cart.html");
-  const pageText = await browser.$("body");
-  expect(pageText).toHaveTextContaining("Your Cart");
+Then("user should redirect to homepage", () => {
+  // Write code here that turns the phrase above into concrete actions
+});
+
+Then("user should see {string} on cart page", (s) => {
+  // Write code here that turns the phrase above into concrete actions
+});
+
+Then("user add {string} to cart", (s) => {
+  // Write code here that turns the phrase above into concrete actions
 });
